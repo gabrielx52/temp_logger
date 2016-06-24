@@ -26,10 +26,11 @@ def temp_writer(data_to_write):
     ''' writes data to daily txt file log '''
     with open('{}.txt'.format(datetime.now().strftime('%m.%d.%Y')), 'a+') as f:
         f.write(data_to_write)
+        print(data_to_write)
 
 
 def read_temp():
-    ''' reads and converts temp from sensor, logs if disconected '''
+    ''' reads and converts temp from sensor, logs if disconnected '''
     for temp_sensor in all_sensors:
         if os.path.exists(temp_sensor[1]):
             try:
@@ -46,17 +47,13 @@ def read_temp():
                     if temp_f > 45.0:
                         temp_writer('*** high temp alert *** ')
                         temp_writer('{} {} {}\n'.format(temp_sensor[0], temp_f, datetime.now().strftime('%m/%d/%Y, %I:%M %p')))
-                        print('*** {} high temp alert ***'.format(temp_sensor[0]))
-                        print(temp_sensor[0], str(temp_f), datetime.now().strftime('%m/%d/%Y, %I:%M %p'))
                     else:
                         temp_writer('{} {} {}\n'.format(temp_sensor[0], temp_f, datetime.now().strftime('%m/%d/%Y, %I:%M %p')))
-                        print(temp_sensor[0], temp_f, datetime.now().strftime('%m/%d/%Y, %I:%M %p'))
             except IndexError:
-                temp_writer(str('{} is disconected\n'.format(temp_sensor[0])))
-                print('{} is disconected'.format(temp_sensor[0]))
+                temp_writer(str('{} is disconnected\n'.format(temp_sensor[0])))
         else:
-            temp_writer(str('{} is disconected\n'.format(temp_sensor[0])))
-            print('{} is disconected'.format(temp_sensor[0]))
+            temp_writer(str('{} is disconnected\n'.format(temp_sensor[0])))
+
 
 
 
