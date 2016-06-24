@@ -40,6 +40,11 @@ all_sensors = [temp_sensor_1,
 #                temp_f = temp_c * 9.0 /5.0 + 32.0
 #            print(temp_sensor[0], temp_f, datetime.now().strftime('%m/%d/%Y, %I:%M %p'))  
 
+
+def temp_writer(data_to_write):
+    with open('{}.txt'.format(datetime.now().strftime('%m.%d.%Y')), 'a+') as f:
+        f.write(data_to_write)
+
 def read_temp():
     for temp_sensor in all_sensors:
         if os.path.exists(temp_sensor[1]):
@@ -54,25 +59,22 @@ def read_temp():
                         temp_string = lines[1].strip()[temp_output+2:]
                         temp_c = float(temp_string) / 1000.0
                         temp_f = temp_c * 9.0 /5.0 + 32.0
-                    with open('{}.txt'.format(datetime.now().strftime('%m.%d.%Y')), 'a+') as f:
-                        if temp_f > 45.0:
-                            f.write('*** high temp alert *** ')
-                           # f.write(str(temp_sensor[0], str(temp_f), datetime.now().strftime('%m/%d/%Y, %I:%M %p')))
-                            f.write('{} {} {}\n'.format(temp_sensor[0], temp_f, datetime.now().strftime('%m/%d/%Y, %I:%M %p')))
-                            print('*** {} high temp alert ***'.format(temp_sensor[0]))
-                            print(temp_sensor[0], str(temp_f), datetime.now().strftime('%m/%d/%Y, %I:%M %p'))
-                        else:
-                            #f.write(str(temp_sensor[0], str(temp_f), str(datetime.now().strftime('%m/%d/%Y, %I:%M %p'))))
-                            f.write('{} {} {}\n'.format(temp_sensor[0], temp_f, datetime.now().strftime('%m/%d/%Y, %I:%M %p')))
-                            print(temp_sensor[0], temp_f, datetime.now().strftime('%m/%d/%Y, %I:%M %p'))
+                    if temp_f > 45.0:
+                        temp_writer('*** high temp alert *** ')
+                        temp_writer('{} {} {}\n'.format(temp_sensor[0], temp_f, datetime.now().strftime('%m/%d/%Y, %I:%M %p')))
+                        print('*** {} high temp alert ***'.format(temp_sensor[0]))
+                        print(temp_sensor[0], str(temp_f), datetime.now().strftime('%m/%d/%Y, %I:%M %p'))
+                    else:
+                        temp_writer('{} {} {}\n'.format(temp_sensor[0], temp_f, datetime.now().strftime('%m/%d/%Y, %I:%M %p')))
+                        print(temp_sensor[0], temp_f, datetime.now().strftime('%m/%d/%Y, %I:%M %p'))
             except IndexError:
-                with open('{}.txt'.format(datetime.now().strftime('%m.%d.%Y')), 'a+') as f:
-                    f.write(str('{} is disconected\n'.format(temp_sensor[0])))
-                    print('{} is disconected'.format(temp_sensor[0]))
-        else:
-            with open('{}.txt'.format(datetime.now().strftime('%m.%d.%Y')), 'a+') as f:
-                f.write(str('{} is disconected\n'.format(temp_sensor[0])))
+                temp_writer(str('{} is disconected\n'.format(temp_sensor[0])))
                 print('{} is disconected'.format(temp_sensor[0]))
+        else:
+            temp_writer(str('{} is disconected\n'.format(temp_sensor[0])))
+            print('{} is disconected'.format(temp_sensor[0]))
+
+
 
 
 while True:
