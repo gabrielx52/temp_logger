@@ -26,7 +26,7 @@ def temp_writer(data_to_write):
     ''' writes data to daily txt file log '''
     with open('{}.txt'.format(datetime.now().strftime('%m.%d.%Y')), 'a+') as f:
         f.write(data_to_write)
-        print(data_to_write)
+    print(data_to_write)
 
 
 def read_temp():
@@ -46,9 +46,9 @@ def read_temp():
                         temp_f = temp_c * 9.0 /5.0 + 32.0
                     if temp_f > 45.0:
                         temp_writer('*** high temp alert *** ')
-                        temp_writer('{} {} {}\n'.format(temp_sensor[0], temp_f, datetime.now().strftime('%m/%d/%Y, %I:%M %p')))
+                        temp_writer('{} {:.2f}\u00b0F {}\n'.format(temp_sensor[0], temp_f, datetime.now().strftime('%m/%d/%Y, %I:%M %p')))
                     else:
-                        temp_writer('{} {} {}\n'.format(temp_sensor[0], temp_f, datetime.now().strftime('%m/%d/%Y, %I:%M %p')))
+                        temp_writer('{} {:.2f}\u00b0F {}\n'.format(temp_sensor[0], temp_f, datetime.now().strftime('%m/%d/%Y, %I:%M %p')))
             except IndexError:
                 temp_writer(str('{} is disconnected\n'.format(temp_sensor[0])))
         else:
