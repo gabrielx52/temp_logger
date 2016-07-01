@@ -1,4 +1,5 @@
 from datetime import datetime
+from time import sleep
 
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
@@ -19,18 +20,24 @@ sh = gc.open("palace kitchen temp log")
 
 #print(wks)
 
-try:
-    worksheet = sh.worksheet(datetime.now().strftime('%m.%d.%Y'))
-    worksheet.append_row(temp_row_maker())
-except gspread.exceptions.WorksheetNotFound:
-    worksheet = sh.add_worksheet(datetime.now().strftime('%m.%d.%Y'),
-                                 rows='1',
-                                 cols='10')
-    worksheet.append_row(['time',
-                          'sensor 1',
-                          'sensor 2',
-                          'sensor 3',
-                          'sensor 4',
-                          'sensor 5',
-                          'sensor 6'])
-    worksheet.append_row(temp_row_maker())
+def sheets_logger():
+    try:
+        worksheet = sh.worksheet(datetime.now().strftime('%m.%d.%Y'))
+        worksheet.append_row(temp_row_maker())
+    except gspread.exceptions.WorksheetNotFound:
+        worksheet = sh.add_worksheet(datetime.now().strftime('%m.%d.%Y'),
+                                     rows='1',
+                                     cols='7')
+        worksheet.append_row(['time',
+                              'sensor 1',
+                              'sensor 2',
+                              'sensor 3',
+                              'sensor 4',
+                              'sensor 5',
+                              'sensor 6'])
+        worksheet.append_row(temp_row_maker())
+
+
+while True:
+    sheets_logger()
+    sleep(15)
