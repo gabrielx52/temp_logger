@@ -3,6 +3,8 @@ from datetime import datetime
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 
+from temp_logger import temp_row_maker 
+
 scope = ['https://spreadsheets.google.com/feeds']
 
 credentials = ServiceAccountCredentials.from_json_keyfile_name('/home/pi/temp_logger/palace temp logger-88911bdd605e.json', scope)
@@ -19,7 +21,7 @@ sh = gc.open("palace kitchen temp log")
 
 try:
     worksheet = sh.worksheet(datetime.now().strftime('%m.%d.%Y'))
-    worksheet.append_row([datetime.now().strftime('%I:%M %p')])
+    worksheet.append_row(temp_row_maker())
 except gspread.exceptions.WorksheetNotFound:
     worksheet = sh.add_worksheet(datetime.now().strftime('%m.%d.%Y'),
                                  rows='1',
@@ -31,3 +33,4 @@ except gspread.exceptions.WorksheetNotFound:
                           'sensor 4',
                           'sensor 5',
                           'sensor 6'])
+    worksheet.append_row(temp_row_maker())
