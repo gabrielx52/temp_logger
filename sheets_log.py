@@ -1,3 +1,5 @@
+from datetime import datetime
+
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 
@@ -7,8 +9,25 @@ credentials = ServiceAccountCredentials.from_json_keyfile_name('/home/pi/temp_lo
 
 gc = gspread.authorize(credentials)
 
-wks = gc.open("palace kitchen temp log").sheet1
-wks.update_acell('A1', 'test')
+sh = gc.open("palace kitchen temp log")
+
+#wks = gc.open("palace kitchen temp log").sheet1
+#wks.update_acell('A1', 'test')
 
 
 #print(wks)
+
+try:
+    worksheet = sh.worksheet(datetime.now().strftime('%m.%d.%Y'))
+    worksheet.append_row([datetime.now().strftime('%I:%M %p')])
+except gspread.exceptions.WorksheetNotFound:
+    worksheet = sh.add_worksheet(datetime.now().strftime('%m.%d.%Y'),
+                                 rows='1',
+                                 cols='10')
+    worksheet.append_row(['time',
+                          'sensor 1',
+                          'sensor 2',
+                          'sensor 3',
+                          'sensor 4',
+                          'sensor 5',
+                          'sensor 6'])
